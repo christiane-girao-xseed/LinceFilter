@@ -1,0 +1,46 @@
+***************************
+* Table Scripts Running Log
+* 18/11/2020
+* 08:33:34
+ 
+Updating control files from table script D:\XseedWork\Java\LINCE\CLIEN_B.SCP...
+Running Script command:
+   --APPLICATION=LINCE
+Running Script command:
+   --ISPEC=CLIEN
+Running Script command:
+   --SYSTEMDIR=D:\XseedWork\Java\LINCE
+Running Script command:
+   --FILESDIR=D:\XseedWork\Java\LINCE\Files
+Running Script command:
+   --SCRIPTTYPE=BUILD
+Running Script command:
+   --DBTYPE=SQLSERVER
+Running Script command:
+   --OpenDatabase
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   declare @xsql varchar(100) select @xsql = 'sp_dboption ' + db_name(0) + ',''trunc. log on chkpt.'',true' exec (@xsql) go --End.Sql
+Running Script command:
+   --DropOldTable
+Running Script command:
+   --BeginTransaction
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   CREATE TABLE CLIEN ( CODCLI int NOT NULL ,ENDCLI  VARCHAR(30) NOT NULL ,MAINT  VARCHAR(1) NOT NULL ,NOMCLI  VARCHAR(30) NOT NULL ) GO --End.Sql
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   ALTER TABLE CLIEN ADD CONSTRAINT FCODCLI PRIMARY KEY (CODCLI) GO --End.Sql
+Running Script command:
+   --CommitTransaction
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   declare @xsql varchar(100) select @xsql = 'sp_dboption ' + db_name(0) + ',''trunc. log on chkpt.'',false' exec (@xsql) go --End.Sql
+Running Script command:
+   --UpdateControlFiles
+Running Script command:
+   --CloseDatabase

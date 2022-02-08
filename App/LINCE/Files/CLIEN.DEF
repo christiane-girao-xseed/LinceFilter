@@ -1,0 +1,10 @@
+[OPTIONS]
+Database = LINCE
+Table = CLIEN
+Type = STANDARD
+[DATANAMES]
+CODCLI               ED; N LE; 5 OR; Y
+ENDCLI               ED; A LE; 30
+MAINT                ED; A LE; 1
+NOMCLI               ED; A LE; 30
+[PROFILES]

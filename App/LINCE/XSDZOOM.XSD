@@ -1,0 +1,273 @@
+VERSION 5.00
+Object = "{CDE57A40-8B86-11D0-B3C6-00A0C90AEA82}#1.0#0"; "MSDATGRD.OCX"
+Begin VB.Form XsdZoom 
+   BorderStyle     =   1  'Fixed Single
+   Caption         =   "XsdZoom"
+   ClientHeight    =   2730
+   ClientLeft      =   1515
+   ClientTop       =   2145
+   ClientWidth     =   4920
+   LinkTopic       =   "Form1"
+   MaxButton       =   0   'False
+   MinButton       =   0   'False
+   ScaleHeight     =   2730
+   ScaleWidth      =   4920
+   Begin MSDataGridLib.DataGrid GridZoom 
+      Height          =   795
+      Left            =   0
+      TabIndex        =   1
+      Top             =   0
+      Width           =   4875
+      _ExtentX        =   8599
+      _ExtentY        =   1402
+      _Version        =   393216
+      HeadLines       =   1
+      RowHeight       =   15
+      BeginProperty HeadFont {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ColumnCount     =   2
+      BeginProperty Column00 
+         DataField       =   ""
+         Caption         =   ""
+         BeginProperty DataFormat {6D835690-900B-11D0-9484-00A0C91110ED} 
+            Type            =   0
+            Format          =   ""
+            HaveTrueFalseNull=   0
+            FirstDayOfWeek  =   0
+            FirstWeekOfYear =   0
+            LCID            =   1046
+            SubFormatType   =   0
+         EndProperty
+      EndProperty
+      BeginProperty Column01 
+         DataField       =   ""
+         Caption         =   ""
+         BeginProperty DataFormat {6D835690-900B-11D0-9484-00A0C91110ED} 
+            Type            =   0
+            Format          =   ""
+            HaveTrueFalseNull=   0
+            FirstDayOfWeek  =   0
+            FirstWeekOfYear =   0
+            LCID            =   1046
+            SubFormatType   =   0
+         EndProperty
+      EndProperty
+      SplitCount      =   1
+      BeginProperty Split0 
+         BeginProperty Column00 
+         EndProperty
+         BeginProperty Column01 
+         EndProperty
+      EndProperty
+   End
+   Begin VB.TextBox Text1 
+      BackColor       =   &H00C0C0C0&
+      BorderStyle     =   0  'None
+      Height          =   495
+      Left            =   525
+      TabIndex        =   0
+      TabStop         =   0   'False
+      Top             =   825
+      Width           =   1215
+   End
+End
+Attribute VB_Name = "XsdZoom"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Explicit
+Dim NUMITEM As Integer
+Dim ZoomRecordset As ADODB.Recordset
+Public Sub ZoomMain(pRecordset As ADODB.Recordset)
+    Set ZoomRecordset = pRecordset
+    Me.Show 1
+End Sub
+Private Sub Form_Load()
+On Error GoTo XSDZOOM_FormLoadError
+    Dim I As Integer
+    Dim AuxWidth As Long
+    
+    Me.MousePointer = ccHourglass
+    Me.Caption = Trim$(GLB_ZOOMCAPTION)
+    Text1.ZOrder 1
+    AuxWidth = 0
+  
+    For I = 1 To UBound(GLB_ZOOMITEM)
+        If Trim$(GLB_ZOOMITEM(I)) = "" Then
+            Exit For
+        End If
+    Next
+    NUMITEM = I - 1
+  
+    Set GridZoom.DataSource = ZoomRecordset
+    For I = 1 To NUMITEM
+        If Trim$(GLB_ZOOMHEADER(I)) <> "" Then
+            GridZoom.Columns(I - 1).Caption = GLB_ZOOMHEADER(I)
+        End If
+        If Len(GLB_ZOOMHEADER(I)) < GLB_ZOOMLENGTH(I) Then
+            GridZoom.Columns(I - 1).Width = (GLB_ZOOMLENGTH(I) + 1) * 120
+        Else
+            GridZoom.Columns(I - 1).Width = (Len(GLB_ZOOMHEADER(I)) + 1) * 120
+        End If
+        AuxWidth = AuxWidth + GridZoom.Columns(I - 1).Width
+    Next
+    GridZoom.Height = 225.071 * (GLB_ZOOMOCCURS + 1)
+    GridZoom.Width = AuxWidth + 550
+    Me.Height = GridZoom.Height + 360
+    Me.Width = GridZoom.Width + 100
+    If GLB_ZOOMLEFT = 0 And GLB_ZOOMTOP = 0 Then
+        Me.Top = (Screen.Height - Me.Height) / 2
+        Me.Left = (Screen.Width - Me.Width) / 2
+    Else
+        Me.Left = GLB_ZOOMLEFT
+        Me.Top = GLB_ZOOMTOP
+    End If
+    Me.MousePointer = ccDefault
+    Exit Sub
+XSDZOOM_FormLoadError:
+    ShowDataMsg Str$(Err), Error, GLB_ERRLINE, GLB_SQL, GLB_ERRWHAT, "XSDZOOM_FormLoadError"
+    If GLB_ERRWHAT = vbYes Then
+        Resume Next
+    Else
+        Exit Sub
+    End If
+End Sub
+Private Sub Form_Unload(Cancel As Integer)
+    If Trim$(GLB_ZOOMBREAK) = "" Then
+        GLB_ZOOMBREAK = "ESCAPE"
+    End If
+End Sub
+Private Sub GridZoom_DblClick()
+    GLB_ZOOMBREAK = "ENTER"
+    Text1.SetFocus
+End Sub
+Private Sub GridZoom_KeyDown(Keycode As Integer, SHIFT As Integer)
+On Error GoTo XSDZOOM_GridZoomError
+    Dim I As Integer
+    Dim ZOOMCODE As String
+    GLB_SQL = ""
+    If Keycode <> 16 Or Keycode = 17 Then
+        Select Case Keycode
+            Case vbKeyEscape
+                ZOOMCODE = "ESCAPE"
+            Case vbKeyPageDown
+                ZOOMCODE = "PGDW"
+            Case vbKeyPageUp
+                ZOOMCODE = "PGUP"
+            Case 13
+                ZOOMCODE = "ENTER"
+            Case vbKeyF1
+                ZOOMCODE = "F1"
+            Case vbKeyF2
+                ZOOMCODE = "F2"
+            Case vbKeyF3
+                ZOOMCODE = "F3"
+            Case vbKeyF4
+                ZOOMCODE = "F4"
+            Case vbKeyF5
+                ZOOMCODE = "F5"
+            Case vbKeyF6
+                ZOOMCODE = "F6"
+            Case vbKeyF7
+                ZOOMCODE = "F7"
+            Case vbKeyF8
+                ZOOMCODE = "F8"
+            Case vbKeyF9
+                ZOOMCODE = "F9"
+            Case vbKeyF10
+                ZOOMCODE = "F10"
+            Case vbKeyF11
+                ZOOMCODE = "F11"
+            Case vbKeyF12
+                ZOOMCODE = "F12"
+            Case Else
+                ZOOMCODE = "KEY"
+        End Select
+        If SHIFT = vbShiftMask Then
+            ZOOMCODE = "SHIFT-" + ZOOMCODE
+        End If
+        If SHIFT = vbCtrlMask Then
+            ZOOMCODE = "CTRL-" + ZOOMCODE
+        End If
+        If SHIFT = vbAltMask Then
+            ZOOMCODE = "ALT-" + ZOOMCODE
+        End If
+    
+        For I = 1 To UBound(GLB_ZOOMBREAKLIST)
+            If UCase$(Trim$(GLB_ZOOMBREAKLIST(I))) = UCase$(Trim$(ZOOMCODE)) Or _
+               UCase$(Trim$(ZOOMCODE)) = "ENTER" Or _
+               UCase$(Trim$(ZOOMCODE)) = "ESCAPE" Then
+                GLB_ZOOMBREAK = UCase$(Trim$(ZOOMCODE))
+                Text1.SetFocus
+                Exit Sub
+            End If
+        Next
+    End If
+    Exit Sub
+XSDZOOM_GridZoomError:
+    ShowDataMsg Str$(Err), Error, GLB_ERRLINE, GLB_SQL, GLB_ERRWHAT, "XSDZOOM_GridZoomError"
+    If GLB_ERRWHAT = vbYes Then
+        Resume Next
+    Else
+        Exit Sub
+    End If
+End Sub
+Private Sub Text1_GotFocus()
+    If UCase$(Trim$(GLB_ZOOMBREAK)) <> "ESCAPE" Then
+        Set GridZoom.DataSource = ZoomRecordset
+    Else
+        Set GridZoom.DataSource = Nothing
+        Set ZoomRecordset = Nothing
+    End If
+    Unload Me
+End Sub
+'::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+':: Procedure - ShowDataMsg                                                 ::
+'::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Sub ShowDataMsg(ErrNo As Integer, ErrorText As String, ErrorLine As String, DataLine As String, ErrorWhat As Integer, RoutineName As String)
+    Dim watline As String
+    Dim sError As String
+    Dim nI As Integer
+    
+    If Trim$(ErrorLine) = "" Then
+       watline = ""
+    Else
+       watline = Chr$(13) + Chr$(13) + "At line:" + Chr$(13) + Chr$(13)
+    End If
+    sError = ""
+    'Determine wheter or not this is a database error
+    If DBEngine.ERRORS.Count > 0 Then
+       If DBEngine.ERRORS(DBEngine.ERRORS.Count - 1). _
+           Number = ErrNo Then
+           sError = "Data Error : " & Str$(ErrNo) & vbCrLf
+           For nI = 0 To DBEngine.ERRORS.Count - 1
+               sError = sError & DBEngine.ERRORS(nI) & vbCrLf
+           Next
+           sError = sError & vbCrLf
+       End If
+    End If
+   
+    If sError = "" Then
+       'add error string
+       sError = sError & ErrorText
+    End If
+    Beep
+    MsgBox sError + vbCrLf + watline + ErrorLine + Chr$(13) + Chr$(13) + DataLine, vbExclamation, RoutineName
+End Sub

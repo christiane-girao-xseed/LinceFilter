@@ -1,0 +1,47 @@
+[OPTIONS]
+Database = LINCE
+Table = AV115
+Type = MEMO
+[DATANAMES]
+CDEMPRES             ED; N LE; 2
+CDITEMXX             ED; N LE; 6
+CDPRFECH             ED; N LE; 1
+CDPRODUT             ED; N LE; 7
+INBRINDE             ED; N LE; 1
+INITEESP             ED; N LE; 1
+INPEDORI             ED; N LE; 1
+INSITREG             ED; A LE; 1
+NRPEDIDO             ED; N LE; 9
+NRPEDORI             ED; N LE; 9
+NRSEQITE             ED; N LE; 4
+PCCOMADI             ED; N LE; 5 DE; 2
+PCCOMADP             ED; N LE; 5 DE; 2
+PCCOMGEF             ED; N LE; 5 DE; 2
+PCCOMGER             ED; N LE; 5 DE; 2
+PCCOMPER             ED; N LE; 5 DE; 2
+PCCOMREF             ED; N LE; 5 DE; 2
+PCCOMREL             ED; N LE; 5 DE; 2
+PCCOMREP             ED; N LE; 5 DE; 2
+PCCOMRIP             ED; N LE; 5 DE; 2
+PCCOMSUF             ED; N LE; 5 DE; 2
+PCCOMSUP             ED; N LE; 5 DE; 2
+PCCOMVEF             ED; N LE; 5 DE; 2
+PCCOMVEP             ED; N LE; 5 DE; 2
+PCDESCNT             ED; N LE; 5 DE; 2
+PCDESCON             ED; N LE; 5 DE; 2
+PCDNEMPE             ED; N LE; 5 DE; 2
+PCDPEMPE             ED; N LE; 5 DE; 2
+QTCANPED             ED; N LE; 9 DE; 3
+QTFATPED             ED; N LE; 9 DE; 3
+QTPEDIDA             ED; N LE; 9 DE; 3
+QTPRESUG             ED; N LE; 9 DE; 3
+QTSUGERI             ED; N LE; 9 DE; 3
+TPPREDIF             ED; N LE; 1
+TPREGIST             ED; N LE; 1
+VLCUSSIM             ED; N LE; 10 DE; 4
+VLDVVSIM             ED; N LE; 10 DE; 4
+VLPREMOE             ED; N LE; 14 DE; 6
+VLPREVEN             ED; N LE; 12 DE; 4
+VLPVEMPE             ED; N LE; 14 DE; 6
+VLRECSIM             ED; N LE; 12 DE; 4
+[PROFILES]

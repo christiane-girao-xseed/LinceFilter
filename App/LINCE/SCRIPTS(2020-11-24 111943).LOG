@@ -1,0 +1,50 @@
+***************************
+* Table Scripts Running Log
+* 24/11/2020
+* 11:19:43
+ 
+Updating control files from table script D:\XseedWork\Java\LINCE\AV115_B.SCP...
+Running Script command:
+   --APPLICATION=LINCE
+Running Script command:
+   --ISPEC=AV115
+Running Script command:
+   --SYSTEMDIR=D:\XseedWork\Java\LINCE
+Running Script command:
+   --FILESDIR=D:\XseedWork\Java\LINCE\Files
+Running Script command:
+   --SCRIPTTYPE=BUILD
+Running Script command:
+   --DBTYPE=SQLSERVER
+Running Script command:
+   --OpenDatabase
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   declare @xsql varchar(100) select @xsql = 'sp_dboption ' + db_name(0) + ',''trunc. log on chkpt.'',true' exec (@xsql) go --End.Sql
+Running Script command:
+   --DropOldTable
+Running Script command:
+   --BeginTransaction
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   CREATE TABLE AV115 ( ROWID int IDENTITY ,CDEMPRES tinyint NOT NULL ,CDITEMXX int NOT NULL ,CDPRFECH tinyint NOT NULL ,CDPRODUT int NOT NULL ,INBRINDE tinyint NOT NULL ,INITEESP tinyint NOT NULL ,INPEDORI tinyint NOT NULL ,INSITREG  VARCHAR(1) NOT NULL ,NRPEDIDO int NOT NULL ,NRPEDORI int NOT NULL ,NRSEQITE smallint NOT NULL ,PCCOMADI  NUMERIC(5,2 ) NOT NULL ,PCCOMADP  NUMERIC(5,2 ) NOT NULL ,PCCOMGEF  NUMERIC(5,2 ) NOT NULL ,PCCOMGER  NUMERIC(5,2 ) NOT NULL ,PCCOMPER  NUMERIC(5,2 ) NOT NULL ,PCCOMREF  NUMERIC(5,2 ) NOT NULL ,PCCOMREL  NUMERIC(5,2 ) NOT NULL ,PCCOMREP  NUMERIC(5,2 ) NOT NULL ,PCCOMRIP  NUMERIC(5,2 ) NOT NULL ,PCCOMSUF  NUMERIC(5,2 ) NOT NULL ,PCCOMSUP  NUMERIC(5,2 ) NOT NULL ,PCCOMVEF  NUMERIC(5,2 ) NOT NULL ,PCCOMVEP  NUMERIC(5,2 ) NOT NULL ,PCDESCNT  NUMERIC(5,2 ) NOT NULL ,PCDESCON  NUMERIC(5,2 ) NOT NULL ,PCDNEMPE  NUMERIC(5,2 ) NOT NULL ,PCDPEMPE  NUMERIC(5,2 ) NOT NULL ,QTCANPED  NUMERIC(9,3 ) NOT NULL ,QTFATPED  NUMERIC(9,3 ) NOT NULL ,QTPEDIDA  NUMERIC(9,3 ) NOT NULL ,QTPRESUG  NUMERIC(9,3 ) NOT NULL ,QTSUGERI  NUMERIC(9,3 ) NOT NULL ,TPPREDIF tinyint NOT NULL ,TPREGIST tinyint NOT NULL ,VLCUSSIM  NUMERIC(10,4 ) NOT NULL ,VLDVVSIM  NUMERIC(10,4 ) NOT NULL ,VLPREMOE  NUMERIC(14,6 ) NOT NULL ,VLPREVEN  NUMERIC(12,4 ) NOT NULL ,VLPVEMPE  NUMERIC(14,6 ) NOT NULL ,VLRECSIM  NUMERIC(12,4 ) NOT NULL ) GO --End.Sql
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   ALTER TABLE AV115 ADD CONSTRAINT FAV115ROWID PRIMARY KEY (ROWID) GO --End.Sql
+Running Script command:
+   --Begin.Constraint
+Running Script command:
+   CREATE INDEX missing_index_9 ON [SINGEDB].[singe].[AV115] ([CDEMPRES], [NRPEDIDO], [TPREGIST]) INCLUDE ([CDITEMXX], [CDPRODUT], [INBRINDE], [PCDESCNT], [PCDESCON], [QTCANPED], [QTFATPED], [QTPEDIDA], [VLPREVEN]) GO --End.Constraint
+Running Script command:
+   --CommitTransaction
+Running Script command:
+   --Begin.Sql
+Running Script command:
+   declare @xsql varchar(100) select @xsql = 'sp_dboption ' + db_name(0) + ',''trunc. log on chkpt.'',false' exec (@xsql) go --End.Sql
+Running Script command:
+   --UpdateControlFiles
+Running Script command:
+   --CloseDatabase

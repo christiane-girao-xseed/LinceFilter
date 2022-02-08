@@ -1,0 +1,190 @@
+--APPLICATION=LINCE;
+--ISPEC=AV115;
+--SYSTEMDIR=D:\XseedWork\Java\LINCE;
+--FILESDIR=D:\XseedWork\Java\LINCE\Files;
+--SCRIPTTYPE=REORG;
+--DBTYPE=SQLSERVER;
+
+--MaxCommit 0100;
+
+--OpenDatabase;
+
+--Begin.Sql;
+declare @xsql varchar(100)
+select @xsql = 'sp_dboption ' + db_name(0) + ',''trunc. log on chkpt.'',true'
+exec (@xsql)
+go
+--End.Sql;
+--FieldList 41;
+
+--FieldImage CDEMPRES, N, 20, 0, 0, N;
+--FieldImage CDITEMXX, N, 20, 0, 0, N;
+--FieldImage CDPRFECH, N, 20, 0, 0, N;
+--FieldImage CDPRODUT, N, 20, 0, 0, N;
+--FieldImage INBRINDE, N, 20, 0, 0, N;
+--FieldImage INITEESP, N, 20, 0, 0, N;
+--FieldImage INPEDORI, N, 20, 0, 0, N;
+--FieldImage INSITREG, A, 1, 0, 0, N;
+--FieldImage NRPEDIDO, N, 20, 0, 0, N;
+--FieldImage NRPEDORI, N, 20, 0, 0, N;
+--FieldImage NRSEQITE, N, 20, 0, 0, N;
+--FieldImage PCCOMADI, N, 20, 0, 0, N;
+--FieldImage PCCOMADP, N, 20, 0, 0, N;
+--FieldImage PCCOMGEF, N, 20, 0, 0, N;
+--FieldImage PCCOMGER, N, 20, 0, 0, N;
+--FieldImage PCCOMPER, N, 20, 0, 0, N;
+--FieldImage PCCOMREF, N, 20, 0, 0, N;
+--FieldImage PCCOMREL, N, 20, 0, 0, N;
+--FieldImage PCCOMREP, N, 20, 0, 0, N;
+--FieldImage PCCOMRIP, N, 20, 0, 0, N;
+--FieldImage PCCOMSUF, N, 20, 0, 0, N;
+--FieldImage PCCOMSUP, N, 20, 0, 0, N;
+--FieldImage PCCOMVEF, N, 20, 0, 0, N;
+--FieldImage PCCOMVEP, N, 20, 0, 0, N;
+--FieldImage PCDESCNT, N, 20, 0, 0, N;
+--FieldImage PCDESCON, N, 20, 0, 0, N;
+--FieldImage PCDNEMPE, N, 20, 0, 0, N;
+--FieldImage PCDPEMPE, N, 20, 0, 0, N;
+--FieldImage QTCANPED, N, 20, 0, 0, N;
+--FieldImage QTFATPED, N, 20, 0, 0, N;
+--FieldImage QTPEDIDA, N, 20, 0, 0, N;
+--FieldImage QTPRESUG, N, 20, 0, 0, N;
+--FieldImage QTSUGERI, N, 20, 0, 0, N;
+--FieldImage TPPREDIF, N, 20, 0, 0, N;
+--FieldImage TPREGIST, N, 20, 0, 0, N;
+--FieldImage VLCUSSIM, N, 20, 0, 0, N;
+--FieldImage VLDVVSIM, N, 20, 0, 0, N;
+--FieldImage VLPREMOE, N, 20, 0, 0, N;
+--FieldImage VLPREVEN, N, 20, 0, 0, N;
+--FieldImage VLPVEMPE, N, 20, 0, 0, N;
+--FieldImage VLRECSIM, N, 20, 0, 0, N;
+
+--Unload D:\XseedWork\Java\LINCE\Files\AV115.AUX;
+
+--BeginTransaction;
+
+--Begin.Sql;
+DROP TABLE AV115
+GO
+--End.Sql;
+
+--Begin.Sql;
+CREATE TABLE AV115 (
+    ROWID int IDENTITY
+    ,CDEMPRES smallint NOT NULL
+    ,CDITEMXX int NOT NULL
+    ,CDPRFECH tinyint NOT NULL
+    ,CDPRODUT int NOT NULL
+    ,INBRINDE tinyint NOT NULL
+    ,INITEESP tinyint NOT NULL
+    ,INPEDORI tinyint NOT NULL
+    ,INSITREG  VARCHAR(1) NOT NULL
+    ,NRPEDIDO int NOT NULL
+    ,NRPEDORI int NOT NULL
+    ,NRSEQITE smallint NOT NULL
+    ,PCCOMADI  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMADP  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMGEF  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMGER  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMPER  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMREF  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMREL  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMREP  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMRIP  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMSUF  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMSUP  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMVEF  NUMERIC(5,2 ) NOT NULL
+    ,PCCOMVEP  NUMERIC(5,2 ) NOT NULL
+    ,PCDESCNT  NUMERIC(5,2 ) NOT NULL
+    ,PCDESCON  NUMERIC(5,2 ) NOT NULL
+    ,PCDNEMPE  NUMERIC(5,2 ) NOT NULL
+    ,PCDPEMPE  NUMERIC(5,2 ) NOT NULL
+    ,QTCANPED  NUMERIC(9,3 ) NOT NULL
+    ,QTFATPED  NUMERIC(9,3 ) NOT NULL
+    ,QTPEDIDA  NUMERIC(9,3 ) NOT NULL
+    ,QTPRESUG  NUMERIC(9,3 ) NOT NULL
+    ,QTSUGERI  NUMERIC(9,3 ) NOT NULL
+    ,TPPREDIF tinyint NOT NULL
+    ,TPREGIST tinyint NOT NULL
+    ,VLCUSSIM  NUMERIC(10,4 ) NOT NULL
+    ,VLDVVSIM  NUMERIC(10,4 ) NOT NULL
+    ,VLPREMOE  NUMERIC(14,6 ) NOT NULL
+    ,VLPREVEN  NUMERIC(12,4 ) NOT NULL
+    ,VLPVEMPE  NUMERIC(14,6 ) NOT NULL
+    ,VLRECSIM  NUMERIC(12,4 ) NOT NULL
+    )
+GO
+--End.Sql;
+
+--CommitTransaction;
+
+--FieldList 41;
+--FieldImage CDEMPRES, N, 20, 1, 20, Y;
+--FieldImage CDITEMXX, N, 20, 21, 20, Y;
+--FieldImage CDPRFECH, N, 20, 41, 20, Y;
+--FieldImage CDPRODUT, N, 20, 61, 20, Y;
+--FieldImage INBRINDE, N, 20, 81, 20, Y;
+--FieldImage INITEESP, N, 20, 101, 20, Y;
+--FieldImage INPEDORI, N, 20, 121, 20, Y;
+--FieldImage INSITREG, A, 1, 141, 1, Y;
+--FieldImage NRPEDIDO, N, 20, 142, 20, Y;
+--FieldImage NRPEDORI, N, 20, 162, 20, Y;
+--FieldImage NRSEQITE, N, 20, 182, 20, Y;
+--FieldImage PCCOMADI, N, 20, 202, 20, Y;
+--FieldImage PCCOMADP, N, 20, 222, 20, Y;
+--FieldImage PCCOMGEF, N, 20, 242, 20, Y;
+--FieldImage PCCOMGER, N, 20, 262, 20, Y;
+--FieldImage PCCOMPER, N, 20, 282, 20, Y;
+--FieldImage PCCOMREF, N, 20, 302, 20, Y;
+--FieldImage PCCOMREL, N, 20, 322, 20, Y;
+--FieldImage PCCOMREP, N, 20, 342, 20, Y;
+--FieldImage PCCOMRIP, N, 20, 362, 20, Y;
+--FieldImage PCCOMSUF, N, 20, 382, 20, Y;
+--FieldImage PCCOMSUP, N, 20, 402, 20, Y;
+--FieldImage PCCOMVEF, N, 20, 422, 20, Y;
+--FieldImage PCCOMVEP, N, 20, 442, 20, Y;
+--FieldImage PCDESCNT, N, 20, 462, 20, Y;
+--FieldImage PCDESCON, N, 20, 482, 20, Y;
+--FieldImage PCDNEMPE, N, 20, 502, 20, Y;
+--FieldImage PCDPEMPE, N, 20, 522, 20, Y;
+--FieldImage QTCANPED, N, 20, 542, 20, Y;
+--FieldImage QTFATPED, N, 20, 562, 20, Y;
+--FieldImage QTPEDIDA, N, 20, 582, 20, Y;
+--FieldImage QTPRESUG, N, 20, 602, 20, Y;
+--FieldImage QTSUGERI, N, 20, 622, 20, Y;
+--FieldImage TPPREDIF, N, 20, 642, 20, Y;
+--FieldImage TPREGIST, N, 20, 662, 20, Y;
+--FieldImage VLCUSSIM, N, 20, 682, 20, Y;
+--FieldImage VLDVVSIM, N, 20, 702, 20, Y;
+--FieldImage VLPREMOE, N, 20, 722, 20, Y;
+--FieldImage VLPREVEN, N, 20, 742, 20, Y;
+--FieldImage VLPVEMPE, N, 20, 762, 20, Y;
+--FieldImage VLRECSIM, N, 20, 782, 20, Y;
+
+--Load D:\XseedWork\Java\LINCE\Files\AV115.AUX;
+
+--BeginTransaction;
+
+--Begin.Sql;
+ALTER TABLE AV115 ADD CONSTRAINT FAV115ROWID PRIMARY KEY (ROWID)
+GO
+--End.Sql;
+
+--Begin.Constraint;
+CREATE INDEX missing_index_9 ON [SINGEDB].[singe].[AV115] ([CDEMPRES], [NRPEDIDO], [TPREGIST]) INCLUDE ([CDITEMXX], [CDPRODUT], [INBRINDE], [PCDESCNT], [PCDESCON], [QTCANPED], [QTFATPED], [QTPEDIDA], [VLPREVEN])
+GO
+--End.Constraint;
+
+
+--CommitTransaction;
+
+--Begin.Sql;
+declare @xsql varchar(100)
+select @xsql = 'sp_dboption ' + db_name(0) + ',''trunc. log on chkpt.'',false'
+exec (@xsql)
+go
+--End.Sql;
+
+--UpdateControlFiles;
+
+--CloseDatabase;
