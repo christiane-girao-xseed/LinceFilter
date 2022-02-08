@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 public class TabControlHttpResponseWrapper extends HttpServletResponseWrapper {
 
-	private static final String LOGIN = "SGABR";
+	private static final String LOGIN = "LOGON";
 
 	private String requestId = null;
 	private String location = null;

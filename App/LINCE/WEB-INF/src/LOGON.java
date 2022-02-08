@@ -1145,22 +1145,6 @@ public void initialUSR()
 }
 
 
-public boolean checkSession() 
-{
-	try {
-	String work =  request.getParameter("GLB_WORK");
-	if (work!=null)
-	{
-		move(GLB.WORK, GSDWORK,128);
-	    if (USER.equals(SCREEN_USR)) {
-	    	SCREEN_USR= "OK";
-	    	return true;
-	    }
-	}
-	} catch (Exception e)
-	{}
-	return false;
-}
 public void updGlbWork()
   throws Exception
 {

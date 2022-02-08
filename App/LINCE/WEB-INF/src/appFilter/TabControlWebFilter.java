@@ -55,19 +55,17 @@ public class TabControlWebFilter implements Filter {
 	private static final int TIMEOUT = 10;
 	private static final String LINCE = "/servlet/LOGON";
 
-	private static final String KAIROS_URL = "/servlet/VOZ01";
-	private static final String PEGASUS_REGIONAL_FATURAMENTO = "/servlet/WSACHAREGFAT";
+	//private static final String KAIROS_URL = "/servlet/VOZ01";
+	//private static final String PEGASUS_REGIONAL_FATURAMENTO = "/servlet/WSACHAREGFAT";
 
 	private static final String ERROR_HANDLER_SERVLET_MAP = "errorHandler";
 	private static final String ERROR_HANDLER_PATH = "/servlet/" + ERROR_HANDLER_SERVLET_MAP;
 
 	private static final Set<String> PASS_THROUGH = new HashSet<>(
-			Arrays.asList(new String[] { KAIROS_URL, PEGASUS_REGIONAL_FATURAMENTO, ERROR_HANDLER_PATH }));
+			Arrays.asList(new String[] {  ERROR_HANDLER_PATH }));
 
 	private static final Logger logger = LogManager.getLogger(TabControlWebFilter.class);
 	
-	//public static Logger logger = Logger.getLogger(TabControlWebFilter.class);
-
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -80,9 +78,9 @@ public class TabControlWebFilter implements Filter {
 		TabControlHttpResponseWrapper tabResponse = null;
 
 		String logonPreference = null;
-
+/*
 		String syncTokenSession = null;
-		String syncTokenPage = null;
+		String syncTokenPage = null;*/
 
 		Message message = null;
 
@@ -164,7 +162,7 @@ public class TabControlWebFilter implements Filter {
 						tabResponse = new TabControlHttpResponseWrapper(httpResponse,
 								httpRequest.getParameter(TAB_CONTROL_URL_PARAM));
 
-						syncTokenSession = (String) tabRequest.getSession().getAttribute(SYNC_TOKEN);
+						/*syncTokenSession = (String) tabRequest.getSession().getAttribute(SYNC_TOKEN);
 						syncTokenPage = tabRequest.getParameter(SYNC_TOKEN);
 
 						if (syncTokenSession == null) {
@@ -181,7 +179,7 @@ public class TabControlWebFilter implements Filter {
 						} else if (((TabControlHttpSessionImpl) tabRequest.getSession()).getRequestId() == null) {
 							logger.info("Redirecionamento: UUID invalido");
 							doChain = false;
-						}
+						}*/
 					}
 				}
 
@@ -200,7 +198,7 @@ public class TabControlWebFilter implements Filter {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(TabControlErrorHandler.GURU_MEDITATION, e);
+			//logger.error(TabControlErrorHandler.GURU_MEDITATION, e);
 			httpResponse.sendRedirect(
 					ERROR_HANDLER_SERVLET_MAP + "?" + TAB_CONTROL_URL_PARAM + "=" + ThreadContext.get(USER_TAB_ID));
 		}
@@ -252,12 +250,12 @@ public class TabControlWebFilter implements Filter {
 			}
 		}
 
-		if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) != null) {
+		/*if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) != null) {
 			if (new TabControlHttpRequestWrapper(httpRequest, httpRequest.getParameter(TAB_CONTROL_URL_PARAM))
 					.getSession().getAttribute("VC5090") != null) {
 				servletLogon += "&VC5090";
 			}
-		}
+		}*/
 
 		return servletLogon;
 	}
