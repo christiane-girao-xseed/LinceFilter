@@ -48,16 +48,16 @@ public class TabControlWebFilter implements Filter {
 	public static final String TAB_CONTROL_URL_PARAM = "tabId";
 	public static final String FOREIGN_UUID = "foreign-uuid";
 	public static final String USER_TAB_ID = "userTabId";
-	//public static final String SYNC_TOKEN = "__syncToken";
+	public static final String SYNC_TOKEN = "__syncToken";
 	public static final String MESSAGE_URL_PARAM = "message";
 
 	private static final int TIMEOUT = 100;
 	private static final String LINCE = "/servlet/LOGON";
-	//private static final String ERROR_HANDLER_SERVLET_MAP = "errorHandler";
-	//private static final String ERROR_HANDLER_PATH = "/servlet/" + ERROR_HANDLER_SERVLET_MAP;
+	private static final String ERROR_HANDLER_SERVLET_MAP = "errorHandler";
+	private static final String ERROR_HANDLER_PATH = "/servlet/" + ERROR_HANDLER_SERVLET_MAP;
 
-	//private static final Set<String> PASS_THROUGH = new HashSet<>(
-	//		Arrays.asList(new String[] {  ERROR_HANDLER_PATH }));
+	private static final Set<String> PASS_THROUGH = new HashSet<>(
+			Arrays.asList(new String[] {  ERROR_HANDLER_PATH }));
 
 	private static final Logger logger = LogManager.getLogger(TabControlWebFilter.class);
 	
@@ -73,9 +73,9 @@ public class TabControlWebFilter implements Filter {
 		TabControlHttpResponseWrapper tabResponse = null;
 
 		String logonPreference = null;
-/*
+
 		String syncTokenSession = null;
-		String syncTokenPage = null;*/
+		String syncTokenPage = null;
 
 		Message message = null;
 
@@ -92,7 +92,7 @@ public class TabControlWebFilter implements Filter {
 			logger.info("URL: {} {}?{}", httpRequest.getMethod(), httpRequest.getServletPath(),
 					httpRequest.getQueryString() != null ? httpRequest.getQueryString() : "");
 
-			/*if (checkPassThrough(httpRequest.getServletPath())) {  //#to check , ver se é pagina errorHandle
+			if (checkPassThrough(httpRequest.getServletPath())) {  //#to check , ver se é pagina errorHandle
 				if (httpRequest.getHeader(FOREIGN_UUID) != null) {
 					logger.info("Recebendo UUID externo {}", httpRequest.getHeader(FOREIGN_UUID));
 
@@ -104,7 +104,7 @@ public class TabControlWebFilter implements Filter {
 				}
 
 				executeFilterChain(chain, request, response);
-			} else */
+			} else 
 			{
 				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {
 					if (httpRequest.getServletPath().equals(LINCE) ) {
@@ -194,9 +194,9 @@ public class TabControlWebFilter implements Filter {
 				}
 			}
 		} catch (Exception e) {
-			//logger.error(TabControlErrorHandler.GURU_MEDITATION, e);
-			//httpResponse.sendRedirect(
-			//		ERROR_HANDLER_SERVLET_MAP + "?" + TAB_CONTROL_URL_PARAM + "=" + ThreadContext.get(USER_TAB_ID));
+			logger.error(TabControlErrorHandler.GURU_MEDITATION, e);
+			httpResponse.sendRedirect(
+					ERROR_HANDLER_SERVLET_MAP + "?" + TAB_CONTROL_URL_PARAM + "=" + ThreadContext.get(USER_TAB_ID));
 		}
 	}
 
@@ -213,9 +213,9 @@ public class TabControlWebFilter implements Filter {
 				ChronoUnit.MILLIS.between(begin, end));
 	}
 
-	//private boolean checkPassThrough(String servletPath) {
-	//	return PASS_THROUGH.contains(servletPath);
-	//}
+	private boolean checkPassThrough(String servletPath) {
+		return PASS_THROUGH.contains(servletPath);
+	}
 
 	private String generateRedirect(HttpServletRequest httpRequest, String logonPreference, Message message)
 			throws Exception {
