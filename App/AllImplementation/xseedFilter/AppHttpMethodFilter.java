@@ -1,4 +1,4 @@
-package appFilter;
+package xseedFilter;
 
 import java.io.IOException;
 

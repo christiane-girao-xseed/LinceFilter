@@ -1,4 +1,4 @@
-package appFilter;
+package xseedFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

@@ -787,6 +787,7 @@ public void PreScreen()
 	GSDWORK= move (GLB.WORK,GSDWORK, 128);
 	GSDWORK_GROUP();
      SCREEN_USR = USER;
+     
    }
    catch(Exception e)
    {
@@ -815,6 +816,10 @@ public void Logic()
     PAGENAME = move("LOGON", PAGENAME, 5);
     PAGENAME_ITEM();
     GLB.WORK = move(GSDWORK, GLB.WORK, 128);
+    if (USER.equals("PAGE1"))
+    {
+    	  recall("PAGE1","");
+    }
     
     /*sessionValues = (Map)session.getAttribute("XSDSESSION");
     if (sessionValues==null)
