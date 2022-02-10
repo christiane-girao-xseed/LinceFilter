@@ -3,10 +3,7 @@ package xseedFilter;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.Filter;
@@ -18,8 +15,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//import org.apache.log4j.Logger;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -27,9 +22,9 @@ import org.apache.logging.log4j.ThreadContext;
 /*
  * Configuracao de url-pattern efetuada no web.xml
  */
-//@WebFilter(filterName = "TabControlWebFilter")
-@WebFilter("/*")
-public class TabControlWebFilter implements Filter {
+@WebFilter(filterName = "ControlWebFilter")
+//@WebFilter("/*")
+public class ControlWebFilter implements Filter {
 
 	private enum Message {
 		TIMEOUT("SESSÃO EXPIRADA"), DUPLICATED_SESSION("SESSÃO DUPLICADA");
@@ -49,11 +44,9 @@ public class TabControlWebFilter implements Filter {
 	public static final String FOREIGN_UUID = "foreign-uuid";
 	public static final String USER_TAB_ID = "userTabId";
 	public static final String MESSAGE_URL_PARAM = "message";
-
 	private static final int TIMEOUT = 100;
-	private static final String LINCE = "/servlet/LOGON";
-
-	private static final Logger logger = LogManager.getLogger(TabControlWebFilter.class);
+	private static final String STARTPAGE = "/servlet/LOGON";
+	private static final Logger logger = LogManager.getLogger(ControlWebFilter.class);
 	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -85,7 +78,7 @@ public class TabControlWebFilter implements Filter {
 
 			
 				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {
-					if (httpRequest.getServletPath().equals(LINCE) ) {
+					if (httpRequest.getServletPath().equals(STARTPAGE) ) {
 						logonPreference = httpRequest.getServletPath();
 						if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) == null
 								|| httpRequest.getParameter(TIMESTAMP_URL_PARAM) == null) {
@@ -198,7 +191,6 @@ public class TabControlWebFilter implements Filter {
 				}
 			}
 		}
-
 		return servletLogon;
 	}
 

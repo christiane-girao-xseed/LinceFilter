@@ -46,10 +46,10 @@ public class TabControlHttpResponseWrapper extends HttpServletResponseWrapper {
 
 	public String getLocation() {
 		if (location.equalsIgnoreCase(LOGIN)) {
-			return location + "?" + TabControlWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId + "&"
-					+ TabControlWebFilter.TIMESTAMP_URL_PARAM + "=" + Instant.now().getEpochSecond();
+			return location + "?" + ControlWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId + "&"
+					+ ControlWebFilter.TIMESTAMP_URL_PARAM + "=" + Instant.now().getEpochSecond();
 		} else {
-			return location + "?" + TabControlWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			return location + "?" + ControlWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
 		}
 	}
 }
