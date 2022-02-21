@@ -8,16 +8,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-public class TabControlHttpResponseWrapper extends HttpServletResponseWrapper {
+public class ControlHttpResponseWrapper extends HttpServletResponseWrapper {
 
-	private static final String LOGIN = "LOGON";
+	private static String LOGIN = "";
 
 	private String requestId = null;
 	private String location = null;
 
-	public TabControlHttpResponseWrapper(HttpServletResponse response, String requestId) {
+	public ControlHttpResponseWrapper(HttpServletResponse response, String requestId) {		
 		super(response);
-
+		LOGIN =ControlWebFilter.startupPage;
 		this.requestId = requestId;
 	}
 

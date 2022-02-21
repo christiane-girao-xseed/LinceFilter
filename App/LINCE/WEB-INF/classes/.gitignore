@@ -1,6 +1,5 @@
 /CLIEN.class
 /HLegacy/
-/xseedFilter/
 /LOGON.class
 /MeuFiltro.class
 /MyConnection.class
@@ -8,3 +7,4 @@
 /PAGE2.class
 /RCLIEN.class
 /XseedINI.class
+/xseedFilter/

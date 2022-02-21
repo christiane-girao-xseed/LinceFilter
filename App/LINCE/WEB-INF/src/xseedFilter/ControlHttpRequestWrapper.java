@@ -3,12 +3,12 @@ package xseedFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class TabControlHttpRequestWrapper extends UploadReadyRequestWrapper {
+public class ControlHttpRequestWrapper extends UploadReadyRequestWrapper {
 
-	private TabControlHttpSessionImpl tabControlSession = null;
+	private ControlHttpSessionImpl tabControlSession = null;
 	private String requestId = null;
 
-	public TabControlHttpRequestWrapper(HttpServletRequest request, String requestId) throws Exception {
+	public ControlHttpRequestWrapper(HttpServletRequest request, String requestId) throws Exception {
 		super(request);
 
 		this.requestId = requestId;
@@ -30,7 +30,7 @@ public class TabControlHttpRequestWrapper extends UploadReadyRequestWrapper {
 	@Override
 	public HttpSession getSession() {
 		if (tabControlSession == null) {
-			tabControlSession = new TabControlHttpSessionImpl(super.getSession(), requestId);
+			tabControlSession = new ControlHttpSessionImpl(super.getSession(), requestId);
 		}
 
 		return tabControlSession;
