@@ -8,16 +8,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-public class ControlHttpResponseWrapper extends HttpServletResponseWrapper {
+public class TabHttpResponseWrapper extends HttpServletResponseWrapper {
 
 	private static String LOGIN = "";
 
 	private String requestId = null;
 	private String location = null;
 
-	public ControlHttpResponseWrapper(HttpServletResponse response, String requestId) {		
+	public TabHttpResponseWrapper(HttpServletResponse response, String requestId) {		
 		super(response);
-		LOGIN =ControlWebFilter.startupPage;
+		LOGIN =TabWebFilter.startupPage;
 		this.requestId = requestId;
 	}
 
@@ -46,10 +46,10 @@ public class ControlHttpResponseWrapper extends HttpServletResponseWrapper {
 
 	public String getLocation() {
 		if (location.equalsIgnoreCase(LOGIN)) {
-			return location + "?" + ControlWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId + "&"
-					+ ControlWebFilter.TIMESTAMP_URL_PARAM + "=" + Instant.now().getEpochSecond();
+			return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId + "&"
+					+ TabWebFilter.TIMESTAMP_URL_PARAM + "=" + Instant.now().getEpochSecond();
 		} else {
-			return location + "?" + ControlWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
 		}
 	}
 }

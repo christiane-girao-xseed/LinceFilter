@@ -11,8 +11,8 @@
    
     <filter>
     
-    <filter-name>ControlWebFilter</filter-name>  
-    <filter-class>xseedFilter.ControlWebFilter</filter-class>  
+    <filter-name>TabWebFilter</filter-name>  
+    <filter-class>xseedFilter.TabWebFilter</filter-class>  
       <init-param>  
           <param-name>startupPage</param-name>  
           <param-value>LOGON</param-value>  
@@ -32,8 +32,8 @@
   		<url-pattern>/servlet/*</url-pattern>
   	</filter-mapping>  	
   	
-<filter-mapping>
-  		<filter-name>ControlWebFilter</filter-name>
+    <filter-mapping>
+  		<filter-name>TabWebFilter</filter-name>
   		<url-pattern>/servlet/*</url-pattern>
   	</filter-mapping>
   	

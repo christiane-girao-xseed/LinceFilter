@@ -26,12 +26,11 @@ import org.apache.logging.log4j.ThreadContext;
 /*
  * Configuracao de url-pattern efetuada no web.xml
  */
-@WebFilter(filterName = "ControlWebFilter")
-
-public class ControlWebFilter implements Filter {
+@WebFilter(filterName = "TabWebFilter")
+public class TabWebFilter implements Filter {
 
 	private enum Message {
-		TIMEOUT("SESSÃO EXPIRADA"), DUPLICATED_SESSION("SESSÃO DUPLICADA");
+		TIMEOUT("SESSÃO EXPIRADA");
 		private String message = null;
 
 		Message(String message) {
@@ -42,17 +41,18 @@ public class ControlWebFilter implements Filter {
 			return message;
 		}
 	}
-
 	public static final String TIMESTAMP_URL_PARAM = "timestamp";
 	public static final String TAB_CONTROL_URL_PARAM = "tabId";
 	public static final String FOREIGN_UUID = "foreign-uuid";
 	public static final String USER_TAB_ID = "userTabId";
 	public static final String MESSAGE_URL_PARAM = "message";
-	private static int TIMEOUT = 100;
-	public static String startupPage="";
-	private static  String STARTPAGE = "/servlet/LOGON";
 	
-	private static final Logger logger = LogManager.getLogger(ControlWebFilter.class);
+	
+	private static int timeout = 100;
+	public static String startupPage="";
+	private static  String startURL = "";
+	
+	private static final Logger logger = LogManager.getLogger(TabWebFilter.class);
 	
 //	/https://www.javatpoint.com/filter-config
 	FilterConfig config; 
@@ -68,21 +68,25 @@ public class ControlWebFilter implements Filter {
 
 		boolean doChain = true;
 		
-		startupPage=config.getInitParameter("startupPage");  
+		 startupPage=config.getInitParameter("startupPage");  
          if (startupPage.isEmpty() == false)
          {
-        	 STARTPAGE = "/servlet/" + startupPage;      			  
+        	 startURL = "/servlet/" + startupPage;      			  
          }
-         String timeout=config.getInitParameter("timeout");  
-         if (timeout.isEmpty() == false)
+         else
          {
-        	 TIMEOUT=  Integer.parseInt(timeout);      			  
+        	 startURL = "/servlet/LOGON";   
+         }
+         String timeoutStr=config.getInitParameter("timeout");  
+         if (timeoutStr.isEmpty() == false)
+         {
+        	 timeout=  Integer.parseInt(timeoutStr);      			  
          }
 		 HttpServletRequest httpRequest = null;
 		HttpServletResponse httpResponse = null;
 
-		ControlHttpRequestWrapper tabRequest = null;
-		ControlHttpResponseWrapper tabResponse = null;
+		TabHttpRequestWrapper tabRequest = null;
+		TabHttpResponseWrapper tabResponse = null;
 
 		String logonPreference = null;
 
@@ -103,7 +107,7 @@ public class ControlWebFilter implements Filter {
 
 			
 				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {
-					if (httpRequest.getServletPath().equals(STARTPAGE) ) {
+					if (httpRequest.getServletPath().equals(startURL) ) {
 						logonPreference = httpRequest.getServletPath();
 						if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) == null
 								|| httpRequest.getParameter(TIMESTAMP_URL_PARAM) == null) {
@@ -111,13 +115,13 @@ public class ControlWebFilter implements Filter {
 							doChain = false;
 						} else {
 							if (Instant.now().getEpochSecond()
-									- Long.parseLong(httpRequest.getParameter(TIMESTAMP_URL_PARAM)) > TIMEOUT) {
+									- Long.parseLong(httpRequest.getParameter(TIMESTAMP_URL_PARAM)) > timeout) {
 								logger.info("Redirecionamento: Timestamp vencido");
 								doChain = false;
 							} else {
-								tabRequest = new ControlHttpRequestWrapper(httpRequest,
+								tabRequest = new TabHttpRequestWrapper(httpRequest,
 										httpRequest.getParameter(TAB_CONTROL_URL_PARAM));
-								tabResponse = new ControlHttpResponseWrapper(httpResponse,
+								tabResponse = new TabHttpResponseWrapper(httpResponse,
 										httpRequest.getParameter(TAB_CONTROL_URL_PARAM));
 							}
 						}
@@ -130,7 +134,7 @@ public class ControlWebFilter implements Filter {
 								logger.info("Redirecionamento: Chamada GET sem UUID");
 								doChain = false;
 							} else {
-								tabRequest = new ControlHttpRequestWrapper(httpRequest,
+								tabRequest = new TabHttpRequestWrapper(httpRequest,
 										httpRequest.getParameter(TAB_CONTROL_URL_PARAM));
 
 								if (tabRequest.getSession().isNew()) {
@@ -138,7 +142,7 @@ public class ControlWebFilter implements Filter {
 									message = Message.TIMEOUT;
 									doChain = false;
 								} else {
-									tabResponse = new ControlHttpResponseWrapper(httpResponse,
+									tabResponse = new TabHttpResponseWrapper(httpResponse,
 											httpRequest.getParameter(TAB_CONTROL_URL_PARAM));
 								}
 							}
@@ -149,16 +153,16 @@ public class ControlWebFilter implements Filter {
 						logger.info("Redirecionamento: Chamada POST sem UUID");
 						doChain = false;
 					} else {
-						tabRequest = new ControlHttpRequestWrapper(httpRequest,
+						tabRequest = new TabHttpRequestWrapper(httpRequest,
 								httpRequest.getParameter(TAB_CONTROL_URL_PARAM));
-						tabResponse = new ControlHttpResponseWrapper(httpResponse,
+						tabResponse = new TabHttpResponseWrapper(httpResponse,
 								httpRequest.getParameter(TAB_CONTROL_URL_PARAM));						
 					}
 				}
 
 				if (doChain) {
 					ThreadContext.put(USER_TAB_ID,
-							((ControlHttpSessionImpl) tabRequest.getSession()).getRequestId());
+							((TabHttpSessionImpl) tabRequest.getSession()).getRequestId());
 					executeFilterChain(chain, tabRequest, tabResponse);
 					if (tabResponse.sendRedirect()) {
 						httpResponse.sendRedirect(tabResponse.getLocation());
@@ -218,8 +222,6 @@ public class ControlWebFilter implements Filter {
 		}
 		return servletLogon;
 	}
-	
-	
 	
 	
 

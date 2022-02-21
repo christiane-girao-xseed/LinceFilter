@@ -11,14 +11,14 @@ import javax.servlet.http.HttpSession;
 //import javax.servlet.http.HttpSessionContext;
 import javax.servlet.http.HttpSessionContext;
 
-public class ControlHttpSessionImpl implements HttpSession {
+public class TabHttpSessionImpl implements HttpSession {
 
 	private static final String REQUEST_ID = "__REQUEST_ID";
 	private HttpSession session = null;
 	private String requestId = null;
 	private boolean isNew = false;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-	public ControlHttpSessionImpl(HttpSession session, String requestId) {
+	public TabHttpSessionImpl(HttpSession session, String requestId) {
 		if (requestId == null) {
 			throw new RuntimeException("Parametro requestId nao pode ser nulo");
 		}
