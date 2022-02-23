@@ -14,7 +14,7 @@
       </init-param>
        <init-param>  
           <param-name>timeout</param-name>  
-          <param-value>25</param-value>  
+          <param-value>100</param-value>  
       </init-param>
     </filter>  
   

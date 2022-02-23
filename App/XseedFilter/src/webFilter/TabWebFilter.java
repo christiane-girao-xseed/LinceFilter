@@ -1,4 +1,4 @@
-package xseedFilter;
+package webFilter;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +26,41 @@ import org.apache.logging.log4j.ThreadContext;
 /*
  * Configuracao de url-pattern efetuada no web.xml
  */
+
+
+/*
+ * web.xml
+ * <?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	      xsi:schemaLocation="http://JAVA.sun.com/xml/ns/javaee 
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	      version="3.0"
+          metadata-complete="false">	  
+    <filter>    
+    <filter-name>TabWebFilter</filter-name>  
+    <filter-class>webFilter.TabWebFilter</filter-class>  
+      <init-param>  
+          <param-name>startupPage</param-name>  
+          <param-value>LOGON</param-value>  
+      </init-param>
+       <init-param>  
+          <param-name>timeout</param-name>  
+          <param-value>100</param-value>  
+      </init-param>
+    </filter>  
+  
+  	<filter-mapping>
+  		<filter-name>AppHttpMethodFilter</filter-name>
+  		<url-pattern>/servlet/*</url-pattern>
+  	</filter-mapping>  	
+  	
+    <filter-mapping>
+  		<filter-name>TabWebFilter</filter-name>
+  		<url-pattern>/servlet/*</url-pattern>
+  	</filter-mapping>
+ </web-app>
+ */
 @WebFilter(filterName = "TabWebFilter")
 public class TabWebFilter implements Filter {
 
@@ -48,7 +83,7 @@ public class TabWebFilter implements Filter {
 	public static final String MESSAGE_URL_PARAM = "message";
 	
 	
-	private static int timeout = 100;
+	private static int timeout = 10;
 	public static String startupPage="";
 	private static  String startURL = "";
 	
@@ -222,7 +257,6 @@ public class TabWebFilter implements Filter {
 		}
 		return servletLogon;
 	}
-	
 	
 
 }

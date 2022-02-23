@@ -1,4 +1,4 @@
-package xseedFilter;
+package webFilter;
 
 import java.io.IOException;
 
