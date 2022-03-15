@@ -38,28 +38,33 @@ import org.apache.logging.log4j.ThreadContext;
 	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	      version="3.0"
           metadata-complete="false">	  
-    <filter>    
-    <filter-name>TabWebFilter</filter-name>  
-    <filter-class>webFilter.TabWebFilter</filter-class>  
-      <init-param>  
-          <param-name>startupPage</param-name>  
-          <param-value>LOGON</param-value>  
-      </init-param>
-       <init-param>  
-          <param-name>timeout</param-name>  
-          <param-value>100</param-value>  
-      </init-param>
-    </filter>  
+    <filter>
+ 		<filter-name>TabWebFilter</filter-name> 
+ 		<filter-class>webFilter.TabWebFilter</filter-class> 
+ 		<init-param> 
+  			<param-name>startupPage</param-name> 
+  			<param-value>LOGON</param-value> 
+ 		</init-param>
+ 		<init-param> 
+  			<param-name>timeout</param-name> 
+  			<param-value>15</param-value> 
+ 		</init-param>
+	</filter> 
+
+	<filter>    
+  		<filter-name>AppHttpMethodFilter</filter-name>  
+  		<filter-class>webFilter.AppHttpMethodFilter</filter-class>        
+	</filter>  	
   
-  	<filter-mapping>
-  		<filter-name>AppHttpMethodFilter</filter-name>
+	<filter-mapping>
+  		<filter-name>AppHttpMethodFilter</filter-name>  		
   		<url-pattern>/servlet/*</url-pattern>
-  	</filter-mapping>  	
+ 	</filter-mapping>  	
   	
-    <filter-mapping>
-  		<filter-name>TabWebFilter</filter-name>
-  		<url-pattern>/servlet/*</url-pattern>
-  	</filter-mapping>
+ 	<filter-mapping>
+  		<filter-name>TabWebFilter</filter-name>  		
+    	<url-pattern>/servlet/*</url-pattern>
+ 	</filter-mapping>
  </web-app>
  */
 @WebFilter(filterName = "TabWebFilter")
@@ -143,8 +148,7 @@ public class TabWebFilter implements Filter {
 					httpRequest.getQueryString() != null ? httpRequest.getQueryString() : "");
 
 			
-				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {
-					
+				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {		
 					  
 					
 					
@@ -206,42 +210,12 @@ public class TabWebFilter implements Filter {
 							((TabHttpSessionImpl) tabRequest.getSession()).getRequestId());
 					executeFilterChain(chain, tabRequest, tabResponse);
 					if (tabResponse.sendRedirect()) {
-
-
 						String redirect =tabResponse.getLocation();
-						int index = redirect.indexOf("?");
-						if (index>0)
-						{
-							redirect = redirect.substring(0,index);
-
-							/////////////////////////////	
-							String aux="?";
-
-							Enumeration paramNames = tabRequest.getParameterNames();
-
-
-							while(paramNames.hasMoreElements()) {
-								String paramName = (String)paramNames.nextElement();
-								//String paramValue = request.getParameterValues(paramName);
-
-								String[] paramValues = tabRequest.getParameterValues(paramName);
-
-								String x = paramName + "=" + paramValues[0];
-
-								redirect = redirect + aux + paramName + "=" +  paramValues[0];
-								aux="&";
-								//  System.out.println(x);
-							}
-						}
-			            httpResponse.sendRedirect(redirect);
-						
-						///////////////////////////
-						//httpResponse.sendRedirect(tabResponse.getLocation());
+						httpResponse.sendRedirect(redirect);						
 						logger.info("Response: {} {}", httpResponse.getStatus(), tabResponse.getLocation());
 					}
 				} else {
-					String redirectURL = generateRedirect(httpRequest, logonPreference, message);
-					
+					String redirectURL = generateRedirect(httpRequest, logonPreference, message);		
 			
 					
 					
@@ -273,21 +247,13 @@ public class TabWebFilter implements Filter {
 		String fullQueryString = null;
 		String servletLogon = null;
 		String[] keyValue = null;
-     	servletLogon = startupPage; //"LOGON";
-	
-     	
+     	servletLogon = startupPage; //"LOGON";     	
 		servletLogon += "?" + TAB_CONTROL_URL_PARAM + "=" + UUID.randomUUID().toString() + "&" + TIMESTAMP_URL_PARAM
 				+ "=" + Instant.now().getEpochSecond();
-     	
-		
-		
-		
-
 		if (message != null) {
 			servletLogon += "&" + MESSAGE_URL_PARAM + "="
 					+ Base64.getEncoder().encodeToString(message.getMessage().getBytes());
 		}
-
 		fullQueryString = httpRequest.getQueryString();
 
 		if (fullQueryString != null) {

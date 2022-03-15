@@ -38,26 +38,12 @@ public class inicio extends HttpServlet
 
 			writeAttributes();
 	    
+			
+			
             String s = new String("");
             String s1 = "http://" + httpservletrequest.getServerName() + ":8080/LINCE/servlet/LOGON";
             
-         /*   String aux="?";
-            
-            Enumeration paramNames = request.getParameterNames();
-
-            while(paramNames.hasMoreElements()) {
-               String paramName = (String)paramNames.nextElement();
-               //String paramValue = request.getParameterValues(paramName);
-               
-               String[] paramValues = request.getParameterValues(paramName);
-               
-               String x = paramName + "=" + paramValues[0];
-               
-               s1 = s1 + aux + paramName + "=" +  paramValues[0];
-               aux="&";
-               System.out.println(x);
-            }*/
-            
+        
             if(httpservletrequest.getParameter("session") != null)
                 s = "?session=" + httpservletrequest.getParameter("session");
 		

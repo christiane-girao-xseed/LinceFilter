@@ -3,6 +3,8 @@ package webFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -14,11 +16,11 @@ public class TabHttpResponseWrapper extends HttpServletResponseWrapper {
 
 	private String requestId = null;
 	private String location = null;
-
+	
 	public TabHttpResponseWrapper(HttpServletResponse response, String requestId) {		
 		super(response);
 		LOGIN =TabWebFilter.startupPage;
-		this.requestId = requestId;
+		this.requestId = requestId;	
 	}
 
 	@Override
@@ -49,7 +51,14 @@ public class TabHttpResponseWrapper extends HttpServletResponseWrapper {
 			return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId + "&"
 					+ TabWebFilter.TIMESTAMP_URL_PARAM + "=" + Instant.now().getEpochSecond();
 		} else {
-			return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			if (location.indexOf("?")==-1)
+			{
+				return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			}
+			else
+			{
+				return location + "&" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			}
 		}
 	}
 }

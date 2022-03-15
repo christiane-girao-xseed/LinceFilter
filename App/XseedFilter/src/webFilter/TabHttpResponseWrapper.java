@@ -49,7 +49,14 @@ public class TabHttpResponseWrapper extends HttpServletResponseWrapper {
 			return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId + "&"
 					+ TabWebFilter.TIMESTAMP_URL_PARAM + "=" + Instant.now().getEpochSecond();
 		} else {
-			return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			if (location.indexOf("?")==-1)
+			{
+				return location + "?" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			}
+			else
+			{
+				return location + "&" + TabWebFilter.TAB_CONTROL_URL_PARAM + "=" + requestId;
+			}
 		}
 	}
 }
