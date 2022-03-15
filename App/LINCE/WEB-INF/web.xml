@@ -10,21 +10,26 @@
     <filter-class>webFilter.TabWebFilter</filter-class>  
       <init-param>  
           <param-name>startupPage</param-name>  
-          <param-value>LOGON</param-value>  
+          <param-value>inicio</param-value>  
       </init-param>
        <init-param>  
           <param-name>timeout</param-name>  
           <param-value>25</param-value>  
       </init-param>
-    </filter>  
+    </filter>
+
+    <filter>    
+    <filter-name>AppHttpMethodFilter</filter-name>  
+    <filter-class>webFilter.AppHttpMethodFilter</filter-class>        
+    </filter>  	
   
   	<filter-mapping>
-  		<filter-name>AppHttpMethodFilter</filter-name>
+  		<filter-name>AppHttpMethodFilter</filter-name>  		
   		<url-pattern>/servlet/*</url-pattern>
   	</filter-mapping>  	
   	
     <filter-mapping>
-  		<filter-name>TabWebFilter</filter-name>
+  		<filter-name>TabWebFilter</filter-name>  		
   		<url-pattern>/servlet/*</url-pattern>
   	</filter-mapping>
  </web-app>

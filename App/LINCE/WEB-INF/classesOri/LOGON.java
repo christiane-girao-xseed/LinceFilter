@@ -92,7 +92,7 @@ try
         return;
     }
     ispecLOGON.setOnXmit(ispecLOGON.session);
-    if (ispecLOGON.checkTimeout(ispecLOGON.session) == true)
+  /*  if (ispecLOGON.checkTimeout(ispecLOGON.session) == true)
     {
        XseedINI xseedIni = new XseedINI();
        ispecLOGON.reloadRts(ispecLOGON.session, xseedIni );
@@ -108,6 +108,31 @@ try
     {
         ispecLOGON.FormToScreen(request);
          ispecLOGON.IspecCycle();
+    }*/
+    if (ispecLOGON.checkTimeout(ispecLOGON.session) == false)
+    {
+        ispecLOGON.ReadClipboard(ispecLOGON.session);
+        ispecLOGON.OpenFiles();
+        ispecLOGON. initialProperties();
+        if (request.getParameter("onSession")==null)
+        {
+            ispecLOGON.IspecLoad();
+        }
+        else
+        {
+            ispecLOGON.FormToScreen(request);
+             ispecLOGON.IspecCycle();
+        }
+        ispecLOGON.WriteClipboard(ispecLOGON.session);
+        ispecLOGON.CommitTransaction();
+        ispecLOGON.ispecRecall(request,response,ispecLOGON.session);
+        ispecLOGON.CommitTransaction();
+        ispecLOGON.CloseFiles();
+    }
+    else
+    {
+        ispecLOGON.GLB.TIMEOUTACTION = "app";
+        ispecLOGON.BuildPageTimeout(response.getWriter());
     }
     ispecLOGON.WriteClipboard(ispecLOGON.session);
     ispecLOGON.CommitTransaction();

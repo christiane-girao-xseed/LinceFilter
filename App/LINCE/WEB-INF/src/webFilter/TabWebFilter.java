@@ -38,33 +38,28 @@ import org.apache.logging.log4j.ThreadContext;
 	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	      version="3.0"
           metadata-complete="false">	  
-    <filter>
- 		<filter-name>TabWebFilter</filter-name> 
- 		<filter-class>webFilter.TabWebFilter</filter-class> 
- 		<init-param> 
-  			<param-name>startupPage</param-name> 
-  			<param-value>LOGON</param-value> 
- 		</init-param>
- 		<init-param> 
-  			<param-name>timeout</param-name> 
-  			<param-value>15</param-value> 
- 		</init-param>
-	</filter> 
-
-	<filter>    
-  		<filter-name>AppHttpMethodFilter</filter-name>  
-  		<filter-class>webFilter.AppHttpMethodFilter</filter-class>        
-	</filter>  	
+    <filter>    
+    <filter-name>TabWebFilter</filter-name>  
+    <filter-class>webFilter.TabWebFilter</filter-class>  
+      <init-param>  
+          <param-name>startupPage</param-name>  
+          <param-value>LOGON</param-value>  
+      </init-param>
+       <init-param>  
+          <param-name>timeout</param-name>  
+          <param-value>100</param-value>  
+      </init-param>
+    </filter>  
   
-	<filter-mapping>
-  		<filter-name>AppHttpMethodFilter</filter-name>  		
+  	<filter-mapping>
+  		<filter-name>AppHttpMethodFilter</filter-name>
   		<url-pattern>/servlet/*</url-pattern>
- 	</filter-mapping>  	
+  	</filter-mapping>  	
   	
- 	<filter-mapping>
-  		<filter-name>TabWebFilter</filter-name>  		
-    	<url-pattern>/servlet/*</url-pattern>
- 	</filter-mapping>
+    <filter-mapping>
+  		<filter-name>TabWebFilter</filter-name>
+  		<url-pattern>/servlet/*</url-pattern>
+  	</filter-mapping>
  </web-app>
  */
 @WebFilter(filterName = "TabWebFilter")
@@ -112,7 +107,8 @@ public class TabWebFilter implements Filter {
 		 startupPage=config.getInitParameter("startupPage");  
          if (startupPage.isEmpty() == false)
          {
-        	 startURL = "/servlet/" + startupPage;      			  
+        	 startURL = "/servlet/" + startupPage;    
+        	
          }
          else
          {
@@ -148,6 +144,10 @@ public class TabWebFilter implements Filter {
 
 			
 				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {
+					
+					  
+					
+					
 					if (httpRequest.getServletPath().equals(startURL) ) {
 						logonPreference = httpRequest.getServletPath();
 						if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) == null
@@ -241,6 +241,10 @@ public class TabWebFilter implements Filter {
 					}
 				} else {
 					String redirectURL = generateRedirect(httpRequest, logonPreference, message);
+					
+			
+					
+					
 					httpResponse.sendRedirect(redirectURL);
 					logger.info("Response Seguranca: {} {}", httpResponse.getStatus(), redirectURL);
 				}
@@ -271,8 +275,13 @@ public class TabWebFilter implements Filter {
 		String[] keyValue = null;
      	servletLogon = startupPage; //"LOGON";
 	
+     	
 		servletLogon += "?" + TAB_CONTROL_URL_PARAM + "=" + UUID.randomUUID().toString() + "&" + TIMESTAMP_URL_PARAM
 				+ "=" + Instant.now().getEpochSecond();
+     	
+		
+		
+		
 
 		if (message != null) {
 			servletLogon += "&" + MESSAGE_URL_PARAM + "="

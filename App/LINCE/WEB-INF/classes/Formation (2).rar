@@ -1,0 +1,229 @@
+/*     */ import java.io.FileOutputStream;
+/*     */ import java.io.IOException;
+/*     */ import java.io.PrintStream;
+/*     */ import java.io.PrintWriter;
+/*     */ import java.text.DecimalFormatSymbols;
+/*     */ import java.text.SimpleDateFormat;
+/*     */ import java.util.Date;
+/*     */ import javax.servlet.ServletException;
+/*     */ import javax.servlet.http.HttpServlet;
+/*     */ import javax.servlet.http.HttpServletRequest;
+/*     */ import javax.servlet.http.HttpServletResponse;
+/*     */ import javax.servlet.http.HttpSession;
+/*     */ 
+/*     */ public class app extends HttpServlet {
+/*     */   private static final long serialVersionUID = 1L;
+/*     */   
+/*     */   private HttpServletRequest request;
+/*     */   
+/*     */   private HttpServletResponse response;
+/*     */   
+/*  22 */   Rts rts = new Rts();
+/*     */   
+/*     */   public void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException, ServletException {
+/*  35 */     doPost(pRequest, pResponse);
+/*     */   }
+/*     */   
+/*     */   public void doPost(HttpServletRequest pRequest, HttpServletResponse pResponse) throws IOException, ServletException {
+/*     */     try {
+/*  51 */       this.request = pRequest;
+/*  52 */       this.response = pResponse;
+/*  54 */       buildPage();
+/*  55 */       writeAttributes();
+/*  57 */     } catch (Exception exception) {}
+/*     */   }
+/*     */   
+/*     */   private void buildPage() throws Exception {
+/*  69 */     String wLink = "newWindow = window.open(";
+/*  71 */     if (!this.rts.startupPage.equals("")) {
+/*  73 */       wLink = String.valueOf(wLink) + "'" + this.rts.startupPage + "',";
+/*  75 */     } else if (!XseedINI.getFireupIspec().equals("")) {
+/*  77 */       wLink = String.valueOf(wLink) + "'" + XseedINI.getFireupIspec() + "',";
+/*     */     } else {
+/*  81 */       wLink = String.valueOf(wLink) + "'XseedController',";
+/*     */     } 
+/*  84 */     SimpleDateFormat wFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+/*  85 */     String wNow = wFormatter.format(new Date());
+/*  87 */     wLink = String.valueOf(wLink) + "'" + this.rts.appName + wNow + "',";
+/*  89 */     wLink = String.valueOf(wLink) + "\"";
+/*  92 */     if (this.rts.browserToolBar.toUpperCase().equals("TRUE")) {
+/*  94 */       wLink = String.valueOf(wLink) + "toolbar = yes";
+/*     */     } else {
+/*  98 */       wLink = String.valueOf(wLink) + "toolbar = no";
+/*     */     } 
+/* 101 */     if (this.rts.browserStatusBar.toUpperCase().equals("TRUE")) {
+/* 103 */       wLink = String.valueOf(wLink) + ", status = yes";
+/*     */     } else {
+/* 107 */       wLink = String.valueOf(wLink) + ", status = no";
+/*     */     } 
+/* 110 */     if (this.rts.browserMenuBar.toUpperCase().equals("TRUE")) {
+/* 112 */       wLink = String.valueOf(wLink) + ", menubar = yes";
+/*     */     } else {
+/* 116 */       wLink = String.valueOf(wLink) + ", menubar = no";
+/*     */     } 
+/* 119 */     if (this.rts.browserLocation.toUpperCase().equals("TRUE")) {
+/* 121 */       wLink = String.valueOf(wLink) + ", location = yes";
+/*     */     } else {
+/* 125 */       wLink = String.valueOf(wLink) + ", location = no";
+/*     */     } 
+/* 128 */     if (this.rts.browserResizable.toUpperCase().equals("TRUE")) {
+/* 130 */       wLink = String.valueOf(wLink) + ", resizable = yes";
+/*     */     } else {
+/* 134 */       wLink = String.valueOf(wLink) + ", resizable = no";
+/*     */     } 
+/* 137 */     if (this.rts.browserScrollbars.toUpperCase().equals("TRUE")) {
+/* 139 */       wLink = String.valueOf(wLink) + ", scrollbars = yes";
+/*     */     } else {
+/* 143 */       wLink = String.valueOf(wLink) + ", scrollbars = no";
+/*     */     } 
+/* 146 */     if (this.rts.browserTop.equals("")) {
+/* 148 */       wLink = String.valueOf(wLink) + ", top = 0";
+/*     */     } else {
+/* 152 */       wLink = String.valueOf(wLink) + ", top = " + this.rts.browserTop;
+/*     */     } 
+/* 155 */     if (this.rts.browserLeft.equals("")) {
+/* 157 */       wLink = String.valueOf(wLink) + ", left = 0";
+/*     */     } else {
+/* 161 */       wLink = String.valueOf(wLink) + ", left = " + this.rts.browserLeft;
+/*     */     } 
+/* 164 */     if (this.rts.browserHeight.equals("")) {
+/* 166 */       wLink = String.valueOf(wLink) + ", height = 460";
+/*     */     } else {
+/* 170 */       wLink = String.valueOf(wLink) + ", height = " + this.rts.browserHeight;
+/*     */     } 
+/* 173 */     if (this.rts.browserWidth.equals("")) {
+/* 175 */       wLink = String.valueOf(wLink) + ", width = 790,";
+/*     */     } else {
+/* 179 */       wLink = String.valueOf(wLink) + ", width = " + this.rts.browserWidth;
+/*     */     } 
+/* 184 */     wLink = String.valueOf(wLink) + "\");";
+/* 186 */     this.response.setContentType("text/html");
+/* 187 */     PrintWriter out = this.response.getWriter();
+/* 189 */     out.println("<html>");
+/* 190 */     out.println("<head>");
+/* 191 */     out.println("<script language=\"javascript\">");
+/* 192 */     out.println("function OpenBrowser(){ ");
+/* 194 */     out.println(wLink);
+/* 196 */     out.println("newWindow.focus(); parent.opener = top; window.open('','_self'); parent.close(); } ");
+/* 198 */     out.println("</script>");
+/* 199 */     out.println("</head>");
+/* 200 */     out.println("<body onLoad=\"OpenBrowser()\">");
+/* 201 */     out.println("</body></html>");
+/*     */   }
+/*     */   
+/*     */   public void writeAttributes() throws Exception {
+/* 211 */     HttpSession wSession = this.request.getSession(true);
+/* 214 */     wSession.setAttribute("Xseed_description", this.rts.description);
+/* 215 */     wSession.setAttribute("Xseed_targetOS", this.rts.targetOS);
+/* 216 */     wSession.setAttribute("Xseed_targetCompiler", this.rts.targetCompiler);
+/* 217 */     wSession.setAttribute("Xseed_user", this.rts.user);
+/* 218 */     wSession.setAttribute("Xseed_ipAddress", this.rts.ipAddress);
+/* 219 */     wSession.setAttribute("Xseed_clipboard", this.rts.clipboard);
+/* 220 */     wSession.setAttribute("Xseed_appName", this.rts.appName);
+/* 221 */     wSession.setAttribute("Xseed_appKey", this.rts.appKey);
+/* 222 */     wSession.setAttribute("Xseed_auditSession", this.rts.auditSession);
+/* 224 */     wSession.setAttribute("Xseed_systemPath", this.rts.systemPath);
+/* 225 */     wSession.setAttribute("Xseed_metaInfPath", this.rts.metaInfPath);
+/* 226 */     wSession.setAttribute("Xseed_webInfPath", this.rts.webInfPath);
+/* 227 */     wSession.setAttribute("Xseed_classesPath", this.rts.classesPath);
+/* 228 */     wSession.setAttribute("Xseed_libraryPath", this.rts.libraryPath);
+/* 229 */     wSession.setAttribute("Xseed_sourcePath", this.rts.sourcePath);
+/* 230 */     wSession.setAttribute("Xseed_auditPath", this.rts.auditPath);
+/* 231 */     wSession.setAttribute("Xseed_backupPath", this.rts.backupPath);
+/* 232 */     wSession.setAttribute("Xseed_batchPath", this.rts.batchPath);
+/* 233 */     wSession.setAttribute("Xseed_databasePath", this.rts.databasePath);
+/* 234 */     wSession.setAttribute("Xseed_docPath", this.rts.docPath);
+/* 235 */     wSession.setAttribute("Xseed_filesPath", this.rts.filesPath);
+/* 236 */     wSession.setAttribute("Xseed_imagesPath", this.rts.imagesPath);
+/* 237 */     wSession.setAttribute("Xseed_msgsPath", this.rts.msgsPath);
+/* 238 */     wSession.setAttribute("Xseed_tempPath", this.rts.tempPath);
+/* 240 */     wSession.setAttribute("Xseed_DBName", this.rts.DBName);
+/* 241 */     wSession.setAttribute("Xseed_DBUsername", this.rts.DBUsername);
+/* 242 */     wSession.setAttribute("Xseed_DBPassword", this.rts.DBPassword);
+/* 243 */     wSession.setAttribute("Xseed_DBServer", this.rts.DBServer);
+/* 244 */     wSession.setAttribute("Xseed_DBDataSource", this.rts.DBDataSource);
+/* 245 */     wSession.setAttribute("Xseed_DBEngine", this.rts.DBEngine);
+/* 246 */     wSession.setAttribute("Xseed_DBConnection", this.rts.DBConnection);
+/* 247 */     wSession.setAttribute("Xseed_DBStatement", this.rts.DBSqlStatements);
+/* 249 */     wSession.setAttribute("Xseed_browserToolBar", this.rts.browserToolBar);
+/* 250 */     wSession.setAttribute("Xseed_browserMenuBar", this.rts.browserMenuBar);
+/* 251 */     wSession.setAttribute("Xseed_browserLocation", this.rts.browserLocation);
+/* 252 */     wSession.setAttribute("Xseed_browserResizable", this.rts.browserResizable);
+/* 253 */     wSession.setAttribute("Xseed_browserScrollbars", this.rts.browserScrollbars);
+/* 254 */     wSession.setAttribute("Xseed_browserLeft", this.rts.browserLeft);
+/* 255 */     wSession.setAttribute("Xseed_browserTop", this.rts.browserTop);
+/* 256 */     wSession.setAttribute("Xseed_browserWidth", this.rts.browserWidth);
+/* 257 */     wSession.setAttribute("Xseed_browserHeight", this.rts.browserHeight);
+/* 262 */     wSession.setAttribute("GLB_APPNAME", XseedINI.getAppName());
+/* 263 */     wSession.setAttribute("GLB_AUDITDIR", XseedINI.getAuditPath());
+/* 264 */     wSession.setAttribute("GLB_BACKUPDIR", XseedINI.getBackupPath());
+/* 265 */     wSession.setAttribute("GLB_BATCHDIR", XseedINI.getBatchPath());
+/* 266 */     wSession.setAttribute("GLB_CLONEAPP", XseedINI.getCloneApp());
+/* 267 */     wSession.setAttribute("GLB_CLONEAPPDIR", XseedINI.getCloneAppPath());
+/* 268 */     wSession.setAttribute("GLB_CLONERTS", XseedINI.getCloneRts());
+/* 269 */     wSession.setAttribute("GLB_CLONERTSDIR", XseedINI.getCloneRtsPath());
+/* 270 */     wSession.setAttribute("GLB_DBNAME", XseedINI.getDBName());
+/* 271 */     wSession.setAttribute("GLB_DBTYPE", XseedINI.getDBType());
+/* 272 */     wSession.setAttribute("GLB_PASSWORD", XseedINI.getDBPassword());
+/* 273 */     wSession.setAttribute("GLB_USERNAME", XseedINI.getDBUsername());
+/* 274 */     wSession.setAttribute("GLB_DOCDIR", XseedINI.getDocPath());
+/* 275 */     wSession.setAttribute("GLB_DSN", XseedINI.getDSN());
+/* 276 */     wSession.setAttribute("GLB_EXTRACTSDIR", XseedINI.getExtractsPath());
+/* 277 */     wSession.setAttribute("GLB_FILESDIR", XseedINI.getFilesPath());
+/* 278 */     wSession.setAttribute("GLB_FIREUPISPEC", XseedINI.getFireupIspec());
+/* 279 */     wSession.setAttribute("GLB_ICONSDIR", XseedINI.getIconsPath());
+/* 280 */     wSession.setAttribute("GLB_MSGSDIR", XseedINI.getMsgsPath());
+/* 281 */     wSession.setAttribute("GLB_MSGTIMER", XseedINI.getMsgTimer());
+/* 282 */     wSession.setAttribute("GLB_SERVER", XseedINI.getServer());
+/* 283 */     wSession.setAttribute("GLB_SYSTEMDIR", XseedINI.getSystemPath());
+/* 284 */     wSession.setAttribute("GLB_STN", XseedINI.getSTN());
+/* 285 */     wSession.setAttribute("GLB_TARGETOS", XseedINI.getTargetOS());
+/* 286 */     wSession.setAttribute("GLB_TEMPDIR", XseedINI.getTempPath());
+/* 287 */     wSession.setAttribute("GLB_USERCODE", XseedINI.getUserCode());
+/* 290 */     wSession.setAttribute("GLB_FULLSTN", this.request.getRemoteAddr());
+/* 293 */     DecimalFormatSymbols wSymbols = new DecimalFormatSymbols();
+/* 295 */     if (this.rts.decimalSeparator.equals("$(ask)")) {
+/* 297 */       wSession.setAttribute("Xseed_decimalSeparator", wSymbols.getDecimalSeparator());
+/*     */     } else {
+/* 301 */       wSession.setAttribute("Xseed_decimalSeparator", this.rts.decimalSeparator);
+/*     */     } 
+/* 304 */     if (this.rts.groupingSeparator.equals("$(ask)")) {
+/* 306 */       wSession.setAttribute("Xseed_groupingSeparator", wSymbols.getGroupingSeparator());
+/*     */     } else {
+/* 310 */       wSession.setAttribute("Xseed_groupingSeparator", this.rts.groupingSeparator);
+/*     */     } 
+/* 314 */     wSession.setAttribute("Xseed_invalidAction", Msg.invalidAction);
+/* 315 */     wSession.setAttribute("Xseed_invalidDelete", Msg.invalidDelete);
+/* 316 */     wSession.setAttribute("Xseed_invalidFind", Msg.invalidFind);
+/* 317 */     wSession.setAttribute("Xseed_invalidFirst", Msg.invalidFirst);
+/* 318 */     wSession.setAttribute("Xseed_invalidInclude", Msg.invalidInclude);
+/* 319 */     wSession.setAttribute("Xseed_invalidLast", Msg.invalidLast);
+/* 320 */     wSession.setAttribute("Xseed_invalidModify", Msg.invalidModify);
+/* 321 */     wSession.setAttribute("Xseed_invalidNext", Msg.invalidNext);
+/* 322 */     wSession.setAttribute("Xseed_invalidPrevious", Msg.invalidPrevious);
+/* 324 */     wSession.setAttribute("Xseed_successfullDelete", Msg.successfullDelete);
+/* 325 */     wSession.setAttribute("Xseed_successfullFind", Msg.successfullFind);
+/* 327 */     wSession.setAttribute("Xseed_successfullFirst", Msg.successfullFirst);
+/* 328 */     wSession.setAttribute("Xseed_successfullInclude", Msg.successfullInclude);
+/* 329 */     wSession.setAttribute("Xseed_successfullLast", Msg.successfullLast);
+/* 330 */     wSession.setAttribute("Xseed_successfullModify", Msg.successfullModify);
+/* 331 */     wSession.setAttribute("Xseed_successfullNext", Msg.successfullNext);
+/* 332 */     wSession.setAttribute("Xseed_successfullPrevious", Msg.successfullPrevious);
+/*     */   }
+/*     */   
+/*     */   public void trace(String pHeader, String pTrailer) throws Exception {
+/*     */     try {
+/* 350 */       String currentPage = "app";
+/* 352 */       String wFile = String.valueOf(this.rts.auditPath) + "\\" + currentPage + ".trace";
+/* 354 */       PrintStream trace = new PrintStream(new FileOutputStream(wFile, true));
+/* 355 */       trace.println("TRC: msg: " + pHeader.trim() + " " + pTrailer.trim());
+/* 356 */       trace.close();
+/* 358 */     } catch (Exception exception) {}
+/*     */   }
+/*     */ }
+
+
+/* Location:              D:\git\LinceFilter\App\LINCE\WEB-INF\classes\!\app.class
+ * Java compiler version: 5 (49.0)
+ * JD-Core Version:       1.1.3
+ */
