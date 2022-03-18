@@ -49,6 +49,10 @@ import org.apache.logging.log4j.ThreadContext;
   			<param-name>timeout</param-name> 
   			<param-value>15</param-value> 
  		</init-param>
+ 		 <init-param>  
+          <param-name>ignorePages</param-name>  
+          <param-value>PAGE1;PAGE2</param-value>  
+      </init-param>
 	</filter> 
 
 	<filter>    
@@ -92,10 +96,10 @@ public class TabWebFilter implements Filter {
 	private static int timeout = 10;
 	public static String startupPage="";
 	private static  String startURL = "";
+	public String [] ignorePages;
 	
 	private static final Logger logger = LogManager.getLogger(TabWebFilter.class);
-	
-//	/https://www.javatpoint.com/filter-config
+
 	FilterConfig config; 
 	
 	public void init(FilterConfig config) throws ServletException {  
@@ -123,6 +127,12 @@ public class TabWebFilter implements Filter {
          {
         	 timeout=  Integer.parseInt(timeoutStr);      			  
          }
+         
+         String ignorePage=config.getInitParameter("ignorePages");  
+         if (ignorePage.isEmpty() == false)
+         {
+        	 ignorePages = ignorePage.split(";");      			  
+         }
 		 HttpServletRequest httpRequest = null;
 		HttpServletResponse httpResponse = null;
 
@@ -137,6 +147,28 @@ public class TabWebFilter implements Filter {
 			httpRequest = (HttpServletRequest) request;
 			httpResponse = (HttpServletResponse) response;
 
+			//Ignore Pages
+			if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)
+					|| httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_POST))
+				
+			{
+				boolean ignore=false;
+				for (String page : ignorePages)
+				{
+					if (  (httpRequest.getServletPath()!=null) && 
+						  ( ("/servlet/" + page).equals(httpRequest.getServletPath())))
+					{
+						ignore=true;
+					}
+				}
+			
+				if (ignore)
+				{				
+					executeFilterChain(chain, httpRequest, httpResponse);
+					return;
+				}
+			}
+			
 			if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) == null) {
 				ThreadContext.put(USER_TAB_ID, UUID.randomUUID().toString());
 			} else {
@@ -146,8 +178,10 @@ public class TabWebFilter implements Filter {
 			logger.info("URL: {} {}?{}", httpRequest.getMethod(), httpRequest.getServletPath(),
 					httpRequest.getQueryString() != null ? httpRequest.getQueryString() : "");
 
-			
-				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {
+				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {		
+					  
+					
+					
 					if (httpRequest.getServletPath().equals(startURL) ) {
 						logonPreference = httpRequest.getServletPath();
 						if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) == null
@@ -206,17 +240,12 @@ public class TabWebFilter implements Filter {
 							((TabHttpSessionImpl) tabRequest.getSession()).getRequestId());
 					executeFilterChain(chain, tabRequest, tabResponse);
 					if (tabResponse.sendRedirect()) {
-
-
 						String redirect =tabResponse.getLocation();
 						httpResponse.sendRedirect(redirect);						
 						logger.info("Response: {} {}", httpResponse.getStatus(), tabResponse.getLocation());
 					}
 				} else {
-					String redirectURL = generateRedirect(httpRequest, logonPreference, message);		
-			
-					
-					
+					String redirectURL = generateRedirect(httpRequest, logonPreference, message);					
 					httpResponse.sendRedirect(redirectURL);
 					logger.info("Response Seguranca: {} {}", httpResponse.getStatus(), redirectURL);
 				}
@@ -245,16 +274,13 @@ public class TabWebFilter implements Filter {
 		String fullQueryString = null;
 		String servletLogon = null;
 		String[] keyValue = null;
-     	servletLogon = startupPage; //"LOGON";
-	
+     	servletLogon = startupPage; //"LOGON";     	
 		servletLogon += "?" + TAB_CONTROL_URL_PARAM + "=" + UUID.randomUUID().toString() + "&" + TIMESTAMP_URL_PARAM
 				+ "=" + Instant.now().getEpochSecond();
-
 		if (message != null) {
 			servletLogon += "&" + MESSAGE_URL_PARAM + "="
 					+ Base64.getEncoder().encodeToString(message.getMessage().getBytes());
 		}
-
 		fullQueryString = httpRequest.getQueryString();
 
 		if (fullQueryString != null) {

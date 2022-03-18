@@ -38,28 +38,33 @@ import org.apache.logging.log4j.ThreadContext;
 	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	      version="3.0"
           metadata-complete="false">	  
-    <filter>    
-    <filter-name>TabWebFilter</filter-name>  
-    <filter-class>webFilter.TabWebFilter</filter-class>  
-      <init-param>  
-          <param-name>startupPage</param-name>  
-          <param-value>LOGON</param-value>  
-      </init-param>
-       <init-param>  
-          <param-name>timeout</param-name>  
-          <param-value>100</param-value>  
-      </init-param>
-    </filter>  
+    <filter>
+ 		<filter-name>TabWebFilter</filter-name> 
+ 		<filter-class>webFilter.TabWebFilter</filter-class> 
+ 		<init-param> 
+  			<param-name>startupPage</param-name> 
+  			<param-value>LOGON</param-value> 
+ 		</init-param>
+ 		<init-param> 
+  			<param-name>timeout</param-name> 
+  			<param-value>15</param-value> 
+ 		</init-param>
+	</filter> 
+
+	<filter>    
+  		<filter-name>AppHttpMethodFilter</filter-name>  
+  		<filter-class>webFilter.AppHttpMethodFilter</filter-class>        
+	</filter>  	
   
-  	<filter-mapping>
-  		<filter-name>AppHttpMethodFilter</filter-name>
+	<filter-mapping>
+  		<filter-name>AppHttpMethodFilter</filter-name>  		
   		<url-pattern>/servlet/*</url-pattern>
-  	</filter-mapping>  	
+ 	</filter-mapping>  	
   	
-    <filter-mapping>
-  		<filter-name>TabWebFilter</filter-name>
-  		<url-pattern>/servlet/*</url-pattern>
-  	</filter-mapping>
+ 	<filter-mapping>
+  		<filter-name>TabWebFilter</filter-name>  		
+    	<url-pattern>/servlet/*</url-pattern>
+ 	</filter-mapping>
  </web-app>
  */
 @WebFilter(filterName = "TabWebFilter")

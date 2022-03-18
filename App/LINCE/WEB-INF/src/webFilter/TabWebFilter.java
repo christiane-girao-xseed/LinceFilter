@@ -92,6 +92,7 @@ public class TabWebFilter implements Filter {
 	private static int timeout = 10;
 	public static String startupPage="";
 	private static  String startURL = "";
+	public String [] ignorePages;
 	
 	private static final Logger logger = LogManager.getLogger(TabWebFilter.class);
 	
@@ -124,6 +125,12 @@ public class TabWebFilter implements Filter {
          {
         	 timeout=  Integer.parseInt(timeoutStr);      			  
          }
+         
+         String ignorePage=config.getInitParameter("ignorePages");  
+         if (ignorePage.isEmpty() == false)
+         {
+        	 ignorePages = ignorePage.split(";");      			  
+         }
 		 HttpServletRequest httpRequest = null;
 		HttpServletResponse httpResponse = null;
 
@@ -138,6 +145,28 @@ public class TabWebFilter implements Filter {
 			httpRequest = (HttpServletRequest) request;
 			httpResponse = (HttpServletResponse) response;
 
+			//Ignore Pages
+			if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)
+					|| httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_POST))
+				
+			{
+				boolean ignore=false;
+				for (String page : ignorePages)
+				{
+					if (  (httpRequest.getServletPath()!=null) && 
+						  ( ("/servlet/" + page).equals(httpRequest.getServletPath())))
+					{
+						ignore=true;
+					}
+				}
+			
+				if (ignore)
+				{				
+					executeFilterChain(chain, httpRequest, httpResponse);
+					return;
+				}
+			}
+			
 			if (httpRequest.getParameter(TAB_CONTROL_URL_PARAM) == null) {
 				ThreadContext.put(USER_TAB_ID, UUID.randomUUID().toString());
 			} else {
@@ -147,7 +176,6 @@ public class TabWebFilter implements Filter {
 			logger.info("URL: {} {}?{}", httpRequest.getMethod(), httpRequest.getServletPath(),
 					httpRequest.getQueryString() != null ? httpRequest.getQueryString() : "");
 
-			
 				if (httpRequest.getMethod().equals(AppHttpMethodFilter.HTTP_GET)) {		
 					  
 					
@@ -215,10 +243,7 @@ public class TabWebFilter implements Filter {
 						logger.info("Response: {} {}", httpResponse.getStatus(), tabResponse.getLocation());
 					}
 				} else {
-					String redirectURL = generateRedirect(httpRequest, logonPreference, message);		
-			
-					
-					
+					String redirectURL = generateRedirect(httpRequest, logonPreference, message);					
 					httpResponse.sendRedirect(redirectURL);
 					logger.info("Response Seguranca: {} {}", httpResponse.getStatus(), redirectURL);
 				}

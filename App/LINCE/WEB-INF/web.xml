@@ -16,6 +16,10 @@
           <param-name>timeout</param-name>  
           <param-value>25</param-value>  
       </init-param>
+      <init-param>  
+          <param-name>ignorePages</param-name>  
+          <param-value>PAGE1;PAGE2</param-value>  
+      </init-param>
     </filter>
 
     <filter>    
